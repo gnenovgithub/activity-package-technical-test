@@ -6,6 +6,8 @@ namespace Activity\Tests;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
+use PHPUnit\Framework\Attributes\Test;
+use Workbench\App\Models\User;
 
 class ActivityTest extends TestCase
 {
@@ -22,10 +24,7 @@ class ActivityTest extends TestCase
         ]);
     }
 
-    /**
-     * When a tracked model is created an action is saved
-     * @test
-     */
+    #[Test]
     public function when_a_tracked_model_is_created_an_action_is_saved(): void
     {
         $user = $this->createUser();
@@ -43,10 +42,7 @@ class ActivityTest extends TestCase
         static::assertTrue($post->actions->first()->is($user->performedActions->first()));
     }
 
-    /**
-     * When a tracked model is updated an action is saved
-     * @test
-     */
+    #[Test]
     public function when_a_tracked_model_is_updated_an_action_is_saved(): void
     {
         $user = $this->createUser();
@@ -67,10 +63,7 @@ class ActivityTest extends TestCase
         static::assertTrue($post->actions->last()->is($user->performedActions->last()));
     }
 
-    /**
-     * When a tracked model is deleted an action is saved
-     * @test
-     */
+    #[Test]
     public function when_a_tracked_model_is_deleted_an_action_is_saved(): void
     {
         $user = $this->createUser();

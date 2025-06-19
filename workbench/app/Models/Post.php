@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Activity\Tests;
+namespace Workbench\App\Models;
 
 use Activity\HasActions;
 use Illuminate\Database\Eloquent\Model;
