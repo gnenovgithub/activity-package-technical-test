@@ -80,6 +80,9 @@ with some comments referencing the question and giving some context).
 7. What should happen when an event is triggered but there is no authenticated user, e.g. in a queued job?
 8. If you had more time to work on this, how would you improve it?
 
+## Using AI tools
+There is no way to know if this test is completed by AI or not, but we know what an AI's solution would look like so this is an opportunity to show that you can write better code than AI.
+
 ## Links that may be useful
 - https://laravel.com/docs/9.x/eloquent#events-using-closures
 - https://www.archybold.com/blog/post/booting-eloquent-model-traits
