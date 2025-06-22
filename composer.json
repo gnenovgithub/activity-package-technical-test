@@ -1,7 +1,7 @@
 {
     "name": "executivesplace/activity-package-technical-test",
     "description": "Build a simple Laravel Package for logging events in an application",
-    "type": "project",
+    "type": "library",
     "autoload": {
         "psr-4": {
             "Activity\\": "src/"

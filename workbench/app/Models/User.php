@@ -3,6 +3,7 @@
 namespace Workbench\App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Activity\HasActions;
 use Activity\PerformsActions;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -13,6 +14,11 @@ class User extends Authenticatable
 {
     /** @use HasFactory<\Workbench\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, PerformsActions;
+
+    /**
+     * Log Actions to the DB
+     */
+    use HasActions;
 
     /**
      * The attributes that are mass assignable.
