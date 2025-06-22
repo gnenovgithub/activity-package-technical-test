@@ -16,9 +16,9 @@ class ActivityServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__.'/../database/migrations' => database_path('migrations'),
+            __DIR__ . '/../database/migrations' => database_path('migrations'),
         ]);
-        
-        $this->loadMigrationsFrom(__DIR__.'/../database/migrations/');
+
+        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations/');
     }
 }

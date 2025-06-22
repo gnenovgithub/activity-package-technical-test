@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Activity;
 
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Model;
 
 trait HasActions
 {
     public static function bootHasActions(): void
     {
         static::created(function ($model) {
-
             // @toDo We can add ACTIONS_LOG_LEVEL or ACTIONS_CREATE_LOG_LEVEL and the metadata to be logged on higher level
             $attributes = $model->getAttributes();
             // @toDo Can be made configurable
@@ -37,7 +37,7 @@ trait HasActions
         return $this->morphMany(Action::class, 'subject');
     }
 
-    protected static function recordAction(string $type, $model, array $metadata = []): void
+    protected static function recordAction(string $type, Model $model, array $metadata = []): void
     {
         $user = auth()->user();
         if (!$user) {
