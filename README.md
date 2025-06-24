@@ -80,6 +80,114 @@ with some comments referencing the question and giving some context).
 7. What should happen when an event is triggered but there is no authenticated user, e.g. in a queued job?
 8. If you had more time to work on this, how would you improve it?
 
+
+## 1. What aspects of this package could be customised with a config file
+
+This package supports customization through a configuration file. Key configurable options include:
+
+### 1.1 We can configure log levels for each action type:
+
+- `ACTIONS_CREATE_LOG_LEVEL`
+- `ACTIONS_UPDATE_LOG_LEVEL`
+- `ACTIONS_DELETE_LOG_LEVEL`
+
+Each can be set to one of three levels:
+
+| Level | Description                                 |
+|-------|---------------------------------------------|
+| 0     | Disable logging for this action type       |
+| 1     | Enable logging without metadata             |
+| 2     | Enable logging with metadata                 |
+
+### 1.2 Alternatively, a single config `ACTIONS_LOG_LEVEL` can apply the same level to all action types, but I prefer the individual control.
+
+### 1.3 We can customize which columns to exclude from the metadata log or from the summary view of returned metadata.
+
+### 1.4 We can customize the database table name used for the actions model.
+
+### 1.5 Support of polymorphic references allowing the "performer" to be any model class, not limited to users.
+
+---
+
+## 2. How would you go about storing more information about the event (i.e. what fields were updated, from what to what)?
+
+- We can save a snapshot of the model state in the metadata column on delete, similar to how it is done on create.
+
+---
+
+## 3. How would you increase the security of the package, ensuring only authorised performers can see the activity for an item?
+
+To ensure only authorized users can view activity logs:
+
+- Use Laravel’s authorization policies to control access to action records.
+- Implement query scopes in the `HasActions` trait to filter visible actions based on permissions.
+
+---
+
+## 4. If a performer or item is deleted from the system, what would their actions say in their summary? How could this be improved?
+
+When a performer or item is deleted:
+
+- The relation will return `null`.
+- By default, the summary shows "Unknown" instead of the performer's name.
+- This can be improved by using **soft deletes** to retain related information.
+
+---
+
+## 5. Suppose the developer wants to record other types of actions that are more specific, i.e. "Task was completed by ____" how could that be implemented?
+
+To record more specific or custom actions, such as `"Task was completed by ____"`, you can extend the model with a method to provide custom action details:
+
+```php
+static::updated(function ($model) {
+    $action = [];
+    if (method_exists($model::class, 'customUpdateAction')) {
+        $action = $model->customUpdateAction();
+    }
+    $actionType = $action['action_type'] ?? 'update';
+    $metadata = $action['metadata'] ?? $model->getChanges();
+    static::recordAction($actionType, $model, $metadata);
+});
+```
+
+## 6. What should be considered when developing the package to scale?
+
+When designing the package to scale effectively, consider the following:
+
+- **Clarity:** Understand the *what*, *why*, *how*, *where*, *when*, and *who* of the data and actions being tracked.
+- **Performance:** Optimize for speed and responsiveness to handle increasing loads.
+- **Scalability & Sustainability:** Ensure the system can grow without sacrificing stability or maintainability.
+- **Cost Efficiency:** Balance resource usage with budget constraints.
+- **Reliability:** Design for fault tolerance and consistent uptime.
+
+Additionally, focus on:
+
+- **Database Indexing:** To speed up queries on large datasets.
+- **Event-Driven Architecture:** Utilize events and queues/jobs to handle processing asynchronously.
+- **Housekeeping:** Implement pruning, archiving, or cleanup strategies to manage log size over time.
+
+---
+
+## 7. What should happen when an event is triggered but there is no authenticated user, e.g. in a queued job?
+
+In cases where an event is triggered without an authenticated user (such as in queued jobs or system processes):
+
+- Log the event using a special identifier like `SYSTEM_ID` or `null`.
+- Represent the performer with labels such as `"System"`, `"Web"`, or `"App"`.
+
+---
+
+## 8. If you had more time to work on this, how would you improve it?
+
+If additional development time were available, potential improvements include:
+
+- Expanding configuration options for more granular control.
+- Enhancing security features and access control mechanisms.
+- Improving performance through further optimization.
+- Adding support for more detailed custom action types and richer metadata.
+- Incorporating best practices around scalability and maintenance as outlined above.
+
+
 ## Using AI tools
 There is no way to know if this test is completed by AI or not, but we know what an AI's solution would look like so this is an opportunity to show that you can write better code than AI.
 
